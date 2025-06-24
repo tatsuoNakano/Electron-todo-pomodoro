@@ -1,0 +1,42 @@
+# Node.js
+node_modules/
+PomodoroToDoApp-win32-x64/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# Electron build output
+dist/
+build/
+out/
+release/
+
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Compiled binaries
+*.exe
+*.dmg
+*.AppImage
+*.zip
+*.tar.gz
+
+# Cache
+.cache/
+.tmp/
+
+# Optional: environment variables
+.env
+.env.local

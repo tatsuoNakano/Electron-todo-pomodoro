@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro ToDo App</title>
+
+</head>
+
+<div >
+
+    <!-- ToDo セクション -->
+    <section class="bg-gray-800 p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 text-teal-400">📝 ToDo リスト</h2>
+
+        <div class="flex gap-2 mb-4">
+            <input type="text" placeholder="新しいタスクを入力"
+                   class="flex-grow bg-gray-700 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 rounded transition">
+                追加
+            </button>
+        </div>
+
+        <ul class="space-y-3">
+            <li class="flex items-center justify-between bg-gray-700 px-4 py-2 rounded">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" class="w-4 h-4 text-teal-500" />
+                    <span class="">デザインモックを作る</span>
+                </div>
+                <button class="text-red-400 hover:text-red-600 transition">🗑</button>
+            </li>
+            <!-- タスクはここに追加される -->
+        </ul>
+    </section>
+
+    <!-- タイマーセクション -->
+    <section class="bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col items-center">
+        <h2 class="text-2xl font-bold mb-4 text-teal-400">⏱ ポモドーロタイマー</h2>
+
+        <div class="mb-6 flex items-center gap-2">
+            <label for="minutes" class="text-sm text-gray-300">時間（分）</label>
+            <input id="minutes" type="number" min="1" value="25"
+                   class="w-20 bg-gray-700 rounded px-2 py-1 text-white text-center focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        </div>
+
+        <div class="text-6xl font-mono font-bold mb-6">25:00</div>
+
+        <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-full text-lg transition">
+            スタート
+        </button>
+    </section>
+</div>
+</body>
+</html>

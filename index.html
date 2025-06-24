@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro ToDo App</title>
+    <link rel="stylesheet" href="styless.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1a202c;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .card {
+            background-color: #2d3748;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4fd1c5;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-text, .input-number {
+            flex: 1;
+            background-color: #4a5568;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .input-number {
+            width: 5rem;
+            text-align: center;
+        }
+
+        .label {
+            font-size: 0.875rem;
+            color: #a0aec0;
+            margin-right: 0.5rem;
+        }
+
+        .btn {
+            background-color: #38b2ac;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #319795;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .todo-item {
+            background-color: #4a5568;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .todo-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox {
+            width: 1rem;
+            height: 1rem;
+            accent-color: #38b2ac;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #f56565;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            color: #e53e3e;
+        }
+
+        .timer-display {
+            font-size: 3rem;
+            font-family: monospace;
+            font-weight: bold;
+            color: #81e6d9;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ToDo セクション -->
+    <section class="card">
+        <h2 class="section-title">📝 ToDo リスト</h2>
+
+        <div class="input-group">
+            <input type="text" id="new-todo-text" placeholder="新しいタスクを入力" class="input-text" />
+            <button id="add-todo-button" class="btn">➕ 追加</button>
+        </div>
+
+        <ul id="todo-list" class="todo-list">
+            <!-- タスクはここに追加される -->
+        </ul>
+    </section>
+
+    <!-- タイマー セクション -->
+    <section class="card">
+        <h2 class="section-title">⏱ ポモドーロタイマー</h2>
+
+        <div class="input-group">
+            <label for="work-minutes" class="label">時間（分）</label>
+            <input id="work-minutes" type="number" min="1" value="25" class="input-number" />
+        </div>
+
+        <div id="timer-display" class="timer-display">25:00</div>
+
+        <div class="input-group">
+            <button id="start-timer" class="btn">▶ スタート</button>
+            <button id="stop-timer" class="btn">⏸ 一時停止</button>
+
+        </div>
+    </section>
+
+</div>
+
+<script src="renderer.js"></script>
+<script src="todo.js"></script>
+<script src="timer.js"></script>
+</body>
+</html>
