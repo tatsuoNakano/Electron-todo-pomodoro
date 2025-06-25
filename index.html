@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro ToDo App</title>
@@ -29,11 +31,14 @@
         }
 
         .card {
-            background-color: #2d3748;
-            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05); /* 半透明 */
             border-radius: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            flex: 1;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px); /* グラス効果 */
+            -webkit-backdrop-filter: blur(12px); /* Safari対応 */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 薄い枠線 */
+            transition: all 0.3s ease;
         }
 
         .section-title {
@@ -130,9 +135,26 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4fd1c5, #38b2ac);
+            transition: width 1s linear;
+        }
     </style>
 </head>
 <body>
+<div id="vanta-bg" style="position: fixed; width: 100%; height: 100%; z-index: -1;"></div>
+
 <div class="container">
 
     <!-- ToDo セクション -->
@@ -159,12 +181,15 @@
         </div>
 
         <div id="timer-display" class="timer-display">25:00</div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
 
-        <div class="input-group">
+        <div class="button-wrapper">
             <button id="start-timer" class="btn">▶ スタート</button>
             <button id="stop-timer" class="btn">⏸ 一時停止</button>
-
         </div>
+
     </section>
 
 </div>
@@ -174,3 +199,17 @@
 <script src="timer.js"></script>
 </body>
 </html>
+<script>
+    VANTA.NET({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x14b8a6,
+        backgroundColor: 0x1a202c
+    });
+</script>
