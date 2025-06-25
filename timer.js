@@ -9,6 +9,7 @@ let interval = null;
 let seconds = 0;
 let totalSeconds = 0;
 let isPaused = false;
+let isRunning = false;
 
 function formatTime(sec) {
     const m = String(Math.floor(sec / 60)).padStart(2, '0');
@@ -24,16 +25,7 @@ function updateProgressBar(percent) {
     progressBar.style.width = `${percent}%`;
 }
 
-function startTimer(duration, notifyLabel = '完了') {
-    if (interval) clearInterval(interval);
-
-    seconds = duration;
-    totalSeconds = duration;
-    isPaused = false;
-    updateDisplay();
-    updateProgressBar(0);
-    stopBtn.textContent = '⏸ 一時停止';
-
+function startInterval(notifyLabel) {
     interval = setInterval(() => {
         if (!isPaused) {
             seconds--;
@@ -43,31 +35,57 @@ function startTimer(duration, notifyLabel = '完了') {
             if (seconds <= 0) {
                 clearInterval(interval);
                 interval = null;
+                isRunning = false;
                 updateProgressBar(100);
                 new Audio('alarm.wav').play();
+
                 if (window.safeAPI) {
                     window.safeAPI.notify(`${notifyLabel}`, '時間になりました！');
                 }
+
+                stopBtn.textContent = '⏸ 一時停止';
             }
         }
     }, 1000);
 }
 
-// 作業タイマー（25分など）
+function initializeTimer(duration, notifyLabel) {
+    if (interval) {
+        clearInterval(interval);
+        interval = null;
+    }
+
+    seconds = duration;
+    totalSeconds = duration;
+    isPaused = false;
+    isRunning = true;
+
+    updateDisplay();
+    updateProgressBar(0);
+    stopBtn.textContent = '⏸ 一時停止';
+
+    startInterval(notifyLabel);
+}
+
+// ▶ 作業タイマー開始
 startBtn.addEventListener('click', () => {
     const duration = parseInt(timeInput.value, 10) * 60;
-    startTimer(duration, 'Pomodoro 完了');
+    initializeTimer(duration, 'Pomodoro 完了');
 });
 
-// 休憩タイマー（固定5分）
+// ☕ 休憩タイマー開始
 breakBtn.addEventListener('click', () => {
-    startTimer(5 * 60, '休憩終了');
+    initializeTimer(5 * 60, '休憩終了');
 });
 
-// 一時停止／再開
+// ⏸ 一時停止 / ▶ 再開
 stopBtn.addEventListener('click', () => {
-    if (interval) {
-        isPaused = !isPaused;
-        stopBtn.textContent = isPaused ? '▶ 再開' : '⏸ 一時停止';
+    if (!isRunning) return;
+
+    isPaused = !isPaused;
+    stopBtn.textContent = isPaused ? '▶ 再開' : '⏸ 一時停止';
+
+    if (!interval && !isPaused) {
+        startInterval('再開後完了');
     }
 });
