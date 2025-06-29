@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const addButton  = document.getElementById('add-todo-button');
     const todoList   = document.getElementById('todo-list');
 
-    // ─── 1) localStorage からロード ───────────────────────
+    // 1) localStorage からロード
     let todos = [];
     try {
         todos = JSON.parse(localStorage.getItem('todos')) || [];
@@ -13,42 +13,49 @@ window.addEventListener('DOMContentLoaded', () => {
         todos = [];
     }
 
-    // ─── 2) 既存タスクを描画 ─────────────────────────────
+    // 2) 既存タスクを描画
     todos.forEach(task => renderTask(task));
 
-    // ─── 3) タスク追加イベント ───────────────────────────
+    // 3) SortableJS でドラッグ＆ドロップを有効化
+    Sortable.create(todoList, {
+        animation: 150,
+        onEnd: () => {
+            // 並び替え後に todos 配列を再構築して永続化
+            const newOrder = [];
+            todoList.querySelectorAll('li').forEach(li => {
+                const id = li.dataset.id;
+                const task = todos.find(t => t.id === id);
+                if (task) newOrder.push(task);
+            });
+            todos = newOrder;
+            persist();
+        }
+    });
+
+    // 4) タスク追加イベント
     addButton.addEventListener('click', () => {
         const title = todoInput.value.trim();
         if (!title) return;
 
-        const task = { title, completed: false };
+        const task = { id: Date.now().toString(), title, completed: false };
         todos.push(task);
         persist();
         renderTask(task);
         todoInput.value = '';
     });
 
-    // Enter でも追加
+    // Enterキーでも追加
     todoInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') addButton.click();
     });
 
-    // ─── 共通：localStorageへ書き込み ─────────────────────
-    function persist() {
-        try {
-            localStorage.setItem('todos', JSON.stringify(todos));
-        } catch (e) {
-            console.error('Failed to save todos to localStorage:', e);
-        }
-    }
-
-    // ─── タスク要素を生成しDOMに追加 ────────────────────
+    // タスク要素を生成してDOMに追加
     function renderTask(task) {
         const li = document.createElement('li');
         li.className = 'todo-item';
+        li.dataset.id = task.id;
         if (task.completed) li.classList.add('completed');
 
-        // チェック＋ラベル
         const content = document.createElement('div');
         content.className = 'todo-content';
 
@@ -68,12 +75,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
         content.append(chk, label);
 
-        // 削除ボタン
         const del = document.createElement('button');
         del.className = 'btn-delete';
         del.textContent = '🗑';
         del.addEventListener('click', () => {
-            const idx = todos.indexOf(task);
+            const idx = todos.findIndex(t => t.id === task.id);
             if (idx > -1) {
                 todos.splice(idx, 1);
                 persist();
@@ -83,5 +89,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         li.append(content, del);
         todoList.appendChild(li);
+    }
+
+    // 配列を localStorage に保存
+    function persist() {
+        try {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        } catch (e) {
+            console.error('Failed to save todos to localStorage:', e);
+        }
     }
 });
