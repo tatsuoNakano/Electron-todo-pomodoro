@@ -1,8 +1,9 @@
 // todo.js
 window.addEventListener('DOMContentLoaded', () => {
-    const todoInput  = document.getElementById('new-todo-text');
-    const addButton  = document.getElementById('add-todo-button');
-    const todoList   = document.getElementById('todo-list');
+    const todoInput    = document.getElementById('new-todo-text');
+    const addButton    = document.getElementById('add-todo-button');
+    const exportBtn    = document.getElementById('export-markdown');
+    const todoList     = document.getElementById('todo-list');
 
     // 1) localStorage からロード
     let todos = [];
@@ -20,7 +21,6 @@ window.addEventListener('DOMContentLoaded', () => {
     Sortable.create(todoList, {
         animation: 150,
         onEnd: () => {
-            // 並び替え後に todos 配列を再構築して永続化
             const newOrder = [];
             todoList.querySelectorAll('li').forEach(li => {
                 const id = li.dataset.id;
@@ -32,11 +32,10 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4) タスク追加イベント
+    // 4) タスク追加
     addButton.addEventListener('click', () => {
         const title = todoInput.value.trim();
         if (!title) return;
-
         const task = { id: Date.now().toString(), title, completed: false };
         todos.push(task);
         persist();
@@ -44,9 +43,24 @@ window.addEventListener('DOMContentLoaded', () => {
         todoInput.value = '';
     });
 
-    // Enterキーでも追加
     todoInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') addButton.click();
+    });
+
+    // 5) Markdownエクスポート機能
+    exportBtn.addEventListener('click', async () => {
+        const lines = todos.map(t => {
+            const box = t.completed ? '[x]' : '[ ]';
+            return `- ${box} ${t.title}`;
+        });
+        const markdown = `# ToDoリスト\n\n${lines.join('\n')}\n`;
+        try {
+            const filePath = await window.fileAPI.saveMarkdown(markdown);
+            if (filePath) alert(`保存しました:\n${filePath}`);
+        } catch (e) {
+            console.error('Markdown保存エラー:', e);
+            alert('Markdownの保存に失敗しました');
+        }
     });
 
     // タスク要素を生成してDOMに追加
@@ -91,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
         todoList.appendChild(li);
     }
 
-    // 配列を localStorage に保存
+    // localStorage に保存
     function persist() {
         try {
             localStorage.setItem('todos', JSON.stringify(todos));
