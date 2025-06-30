@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain, Notification, dialog } = require('electron'
 const path = require('path');
 const fs = require('fs');
 
+// 自動リロード（開発モード）
 if (process.env.NODE_ENV === 'development') {
     try {
         require('electron-reload')(__dirname, {
@@ -16,12 +17,15 @@ function createWindow() {
         width: 1024,
         height: 768,
         backgroundColor: '#1a202c',
+        icon: path.join(__dirname, 'assets', 'icon.ico'), // ← アイコンをここで指定
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true
         }
     });
+
     mainWindow.loadFile('index.html');
+
     if (process.env.NODE_ENV === 'development') {
         mainWindow.webContents.openDevTools();
     }
@@ -32,6 +36,7 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
+
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
@@ -48,8 +53,7 @@ ipcMain.handle('save-markdown', async (_event, markdown) => {
     return filePath;
 });
 
-// 通知リクエスト（既存コード）
+// 通知リクエスト
 ipcMain.on('notify-request', (_e, { title, message }) => {
     new Notification({ title, body: message }).show();
 });
-

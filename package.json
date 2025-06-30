@@ -1,12 +1,14 @@
 {
-  "name": "todo-pomodoro",
+  "name": "GlowTime",
+  "productName": "GlowTime",
   "version": "1.3.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "package": "electron-packager . PomodoroToDoApp --platform=win32"
+    "package": "electron-packager . PomodoroToDoApp --platform=win32",
+    "build": "npx electron-packager . \"GlowTime\" --icon=assets/icon.ico --platform=win32 --arch=x64 --out=dist --overwrite"
   },
   "author": "",
   "license": "ISC",
