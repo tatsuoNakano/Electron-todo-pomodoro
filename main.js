@@ -52,3 +52,4 @@ ipcMain.handle('save-markdown', async (_event, markdown) => {
 ipcMain.on('notify-request', (_e, { title, message }) => {
     new Notification({ title, body: message }).show();
 });
+

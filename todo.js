@@ -1,9 +1,8 @@
-// todo.js
 window.addEventListener('DOMContentLoaded', () => {
-    const todoInput    = document.getElementById('new-todo-text');
-    const addButton    = document.getElementById('add-todo-button');
-    const exportBtn    = document.getElementById('export-markdown');
-    const todoList     = document.getElementById('todo-list');
+    const todoInput = document.getElementById('new-todo-text');
+    const addButton = document.getElementById('add-todo-button');
+    const exportBtn = document.getElementById('export-markdown');
+    const todoList = document.getElementById('todo-list');
 
     // 1) localStorage からロード
     let todos = [];
@@ -17,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 2) 既存タスクを描画
     todos.forEach(task => renderTask(task));
 
-    // 3) SortableJS でドラッグ＆ドロップを有効化
+    // 3) SortableJS でドラッグ＆ドロップ
     Sortable.create(todoList, {
         animation: 150,
         onEnd: () => {
@@ -63,7 +62,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // タスク要素を生成してDOMに追加
+    // タスク描画
     function renderTask(task) {
         const li = document.createElement('li');
         li.className = 'todo-item';
@@ -105,7 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
         todoList.appendChild(li);
     }
 
-    // localStorage に保存
+    // 保存
     function persist() {
         try {
             localStorage.setItem('todos', JSON.stringify(todos));

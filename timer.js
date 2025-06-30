@@ -89,3 +89,15 @@ stopBtn.addEventListener('click', () => {
         startInterval('再開後完了');
     }
 });
+const mainButton = document.getElementById('main-timer-button');
+const dropdown = document.getElementById('timer-dropdown');
+
+mainButton.addEventListener('click', () => {
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-button')) {
+        dropdown.style.display = 'none';
+    }
+});
