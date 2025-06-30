@@ -43,6 +43,8 @@ function startInterval(notifyLabel) {
                     window.safeAPI.notify(`${notifyLabel}`, '時間になりました！');
                 }
 
+                alert('時間です！');
+
                 stopBtn.textContent = '⏸ 一時停止';
             }
         }
@@ -89,6 +91,8 @@ stopBtn.addEventListener('click', () => {
         startInterval('再開後完了');
     }
 });
+
+// ▼ メインドロップダウンボタン
 const mainButton = document.getElementById('main-timer-button');
 const dropdown = document.getElementById('timer-dropdown');
 
