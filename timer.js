@@ -4,12 +4,16 @@ const stopBtn = document.getElementById('stop-timer');
 const timeInput = document.getElementById('work-minutes');
 const display = document.getElementById('timer-display');
 const progressBar = document.getElementById('progress-bar');
+const mainButton = document.getElementById('main-timer-button');
+const dropdown = document.getElementById('timer-dropdown');
+const dots = document.querySelectorAll('#indicator-container .dot');
 
 let interval = null;
 let seconds = 0;
 let totalSeconds = 0;
 let isPaused = false;
 let isRunning = false;
+let completedSessions = 0;
 
 function formatTime(sec) {
     const m = String(Math.floor(sec / 60)).padStart(2, '0');
@@ -23,6 +27,36 @@ function updateDisplay() {
 
 function updateProgressBar(percent) {
     progressBar.style.width = `${percent}%`;
+}
+
+function updateDots() {
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index < completedSessions);
+    });
+}
+
+function notifyUser(title) {
+    if (window.safeAPI) {
+        window.safeAPI.notify(title, '時間になりました！');
+    }
+
+    if (Notification.permission === 'granted') {
+        new Notification(title, {
+            body: '時間になりました！',
+            icon: 'assets/icon.png',
+        });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification(title, {
+                    body: '時間になりました！',
+                    icon: 'assets/icon.png',
+                });
+            }
+        });
+    }
+
+    alert('時間です！');
 }
 
 function startInterval(notifyLabel) {
@@ -39,12 +73,12 @@ function startInterval(notifyLabel) {
                 updateProgressBar(100);
                 new Audio('alarm.wav').play();
 
-                if (window.safeAPI) {
-                    window.safeAPI.notify(`${notifyLabel}`, '時間になりました！');
+                if (notifyLabel === 'Pomodoro 完了') {
+                    completedSessions = Math.min(completedSessions + 1, dots.length);
+                    updateDots();
                 }
 
-                alert('時間です！');
-
+                notifyUser(notifyLabel);
                 stopBtn.textContent = '⏸ 一時停止';
             }
         }
@@ -52,10 +86,7 @@ function startInterval(notifyLabel) {
 }
 
 function initializeTimer(duration, notifyLabel) {
-    if (interval) {
-        clearInterval(interval);
-        interval = null;
-    }
+    if (interval) clearInterval(interval);
 
     seconds = duration;
     totalSeconds = duration;
@@ -83,24 +114,17 @@ breakBtn.addEventListener('click', () => {
 // ⏸ 一時停止 / ▶ 再開
 stopBtn.addEventListener('click', () => {
     if (!isRunning) return;
-
     isPaused = !isPaused;
     stopBtn.textContent = isPaused ? '▶ 再開' : '⏸ 一時停止';
-
-    if (!interval && !isPaused) {
-        startInterval('再開後完了');
-    }
+    if (!interval && !isPaused) startInterval('再開後完了');
 });
 
-// ▼ メインドロップダウンボタン
-const mainButton = document.getElementById('main-timer-button');
-const dropdown = document.getElementById('timer-dropdown');
-
+// ▼ ドロップダウン操作
 mainButton.addEventListener('click', () => {
     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 });
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown-button')) {
         dropdown.style.display = 'none';
     }

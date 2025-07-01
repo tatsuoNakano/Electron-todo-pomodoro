@@ -261,3 +261,66 @@ body {
 }
 
 
+/* === レスポンシブ対応: 画面幅が狭いときに1カラムへ切り替え === */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .card {
+        width: 100%;
+        max-width: none;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #main-timer-button {
+        justify-content: center;
+    }
+
+    .dropdown-menu {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 280px;
+    }
+}
+.pomodoro-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pomodoro-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.pomodoro-dot.active {
+    background-color: #4fd1c5;
+    box-shadow: 0 0 6px #38b2ac, 0 0 12px #319795;
+}
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: #4fd1c5;
+    box-shadow: 0 0 5px #4fd1c5, 0 0 10px #319795;
+}
+
+
